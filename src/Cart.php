@@ -25,7 +25,7 @@ class Cart
 
     /**
      * Instance of the event dispatcher.
-     * 
+     *
      * @var \Illuminate\Contracts\Events\Dispatcher
      */
     private $events;
@@ -55,13 +55,21 @@ class Cart
      * Set the current cart instance.
      *
      * @param string|null $instance
+     * @param null $expire
+     *
      * @return \Gloudemans\Shoppingcart\Cart
      */
-    public function instance($instance = null)
+    public function instance($instance = null, $expire = null)
     {
         $instance = $instance ?: self::DEFAULT_INSTANCE;
 
         $this->instance = sprintf('%s.%s', 'cart', $instance);
+
+        $expireAt = $expire ? (new \DateTime())->add(new \DateInterval("P{$expire}M")) : null;
+
+        $this->session->put($this->instance . '_expired_at', $expireAt);
+
+        return $this;
 
         return $this;
     }
@@ -103,7 +111,7 @@ class Cart
         }
 
         $content->put($cartItem->rowId, $cartItem);
-        
+
         $this->events->fire('cart.added', $cartItem);
 
         $this->session->put($this->instance, $content);
@@ -435,6 +443,24 @@ class Cart
             : new Collection;
 
         return $content;
+    }
+
+    /**
+     * Check if a cart instance is expired with the given expired datetime
+     * @return bool
+     */
+    protected function isExpired()
+    {
+        $expireAt = $this->session->get($this->instance . '_expired_at', null);
+
+        if ($expireAt instanceof \DateTime) {
+
+            return $expireAt->diff(new \DateTime()) > 0;
+
+        }
+
+        return false;
+
     }
 
     /**
