@@ -67,7 +67,7 @@ class Cart
 
         $expireAt = $expire ? ((new \DateTime())->add(new \DateInterval("P{$expire}M"))) : null;
 
-        if(!$this->session->has($this->instance . '_expired_at')){
+        if (!$this->session->has($this->instance . '_expired_at')) {
 
             $this->session->put($this->instance . '_expired_at', $expireAt);
 
@@ -473,7 +473,7 @@ class Cart
 
         if ($expireAt instanceof \DateTime) {
 
-            return $expireAt->diff(new \DateTime()) > 0;
+            return $expireAt <= new\DateTime();
 
         }
 
