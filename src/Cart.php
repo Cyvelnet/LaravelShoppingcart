@@ -67,9 +67,12 @@ class Cart
 
         $expireAt = $expire ? (new \DateTime())->add(new \DateInterval("P{$expire}M")) : null;
 
-        $this->session->put($this->instance . '_expired_at', $expireAt);
+        if(!$this->session->has($this->instance . '_expired_at')){
 
-        return $this;
+            $this->session->put($this->instance . '_expired_at', $expireAt);
+
+        }
+
 
         return $this;
     }
