@@ -65,7 +65,7 @@ class Cart
 
         $this->instance = sprintf('%s.%s', 'cart', $instance);
 
-        $expireAt = $expire ? (new \DateTime())->add(new \DateInterval("P{$expire}M")) : null;
+        $expireAt = $expire ? ((new \DateTime())->add(new \DateInterval("P{$expire}M"))) : null;
 
         if(!$this->session->has($this->instance . '_expired_at')){
 
