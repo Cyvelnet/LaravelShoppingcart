@@ -449,7 +449,7 @@ class Cart
      * Check if a cart instance is expired with the given expired datetime
      * @return bool
      */
-    protected function isExpired()
+    public function isExpired()
     {
         $expireAt = $this->session->get($this->instance . '_expired_at', null);
 
