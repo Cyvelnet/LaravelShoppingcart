@@ -186,6 +186,13 @@ class Cart
         $this->events->fire('cart.removed', $cartItem);
 
         $this->session->put($this->instance, $content);
+        
+        if($content->count() === 0){
+         
+            $this->destroy();
+            
+        }
+        
     }
 
     /**
@@ -214,6 +221,13 @@ class Cart
     public function destroy()
     {
         $this->session->remove($this->instance);
+        
+        
+        if ($this->session->has($this->instance . '_expired_at')) {
+
+            $this->session->remove($this->instance . '_expired_at');
+
+        }
     }
 
     /**
